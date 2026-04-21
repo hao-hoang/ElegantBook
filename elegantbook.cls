@@ -1273,7 +1273,7 @@
 % \renewcommand{\headrule}{}
 \fancypagestyle{plain}{\renewcommand{\headrulewidth}{0pt}\fancyhf{}\renewcommand{\headrule}{}}
 \renewcommand{\sectionmark}[1]{\markright{\thesection\, #1}{}}
-\renewcommand{\chaptermark}[1]{\markboth{\xchaptertitle\, #1}{}}
+\renewcommand{\chaptermark}[1]{\markboth{\IfAppendix{\appendixname\;\thechapter\, #1}{\xchaptertitle\, #1}}{}}
 
 
 \renewcommand*{\maketitle}{%
