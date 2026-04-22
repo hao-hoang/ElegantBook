@@ -397,7 +397,7 @@
 
 
 %%   章节设置
-\RequirePackage[center,pagestyles]{titlesec}
+\RequirePackage[center]{titlesec}
 \RequirePackage[title,titletoc,header]{appendix}
 
 
