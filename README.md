@@ -35,3 +35,61 @@ This work is released under the LaTeX Project Public License, v1.3c or later.
 + [ElegantBookdown](https://github.com/XiangyunHuang/ElegantBookdown)：[XiangyunHuang](https://github.com/XiangyunHuang) 开发并维护的基于 ElegantBook 的 Bookdown 模板。
 + [bookdownplus](https://github.com/pzhaonet/bookdownplus)：应网友要求，[pzhaonet](https://github.com/pzhaonet) 在 bookdownplus 收录了 ElegantPaper 模板，并为 Mac 做了字体适配。
 + [PanBook](https://github.com/annProg/PanBook)：[annProg](https://github.com/annProg) 开发并维护的基于 Markdown 写作的工作流，收录了 ElegantBook 和 ElegantPaper 模板。
+
+---
+
+## Build / Render PDF (Local)
+
+This repository contains two example sources:
+
+- **English**: `elegantbook-en.tex`
+- **Chinese**: `elegantbook-cn.tex` (recommended engine: **XeLaTeX**)
+
+### 1) Install TeX distribution
+
+- **Linux / WSL (recommended)**: install **TeX Live** (full or a reasonably complete scheme).
+  - If you prefer minimal installs, make sure you have at least: `latexmk`, `xelatex`, `biber`, and common LaTeX packages.
+- **macOS**: install **MacTeX**
+- **Windows**: install **TeX Live**
+
+### 2) Build with `latexmk` (recommended)
+
+From the repo root:
+
+```bash
+# English PDF (XeLaTeX)
+latexmk -xelatex -interaction=nonstopmode -file-line-error -synctex=1 elegantbook-en.tex
+
+# Chinese PDF (XeLaTeX)
+latexmk -xelatex -interaction=nonstopmode -file-line-error -synctex=1 elegantbook-cn.tex
+```
+
+Outputs will be `elegantbook-en.pdf` and/or `elegantbook-cn.pdf` in the same directory.
+
+### 3) Clean build artifacts (optional)
+
+```bash
+latexmk -c
+# or, remove everything latexmk generated:
+latexmk -C
+```
+
+### 4) Manual build (if you don’t have `latexmk`)
+
+Because this template uses **biblatex**, you usually need **biber**:
+
+```bash
+# Example: Chinese
+xelatex -interaction=nonstopmode -file-line-error elegantbook-cn.tex
+biber elegantbook-cn
+xelatex -interaction=nonstopmode -file-line-error elegantbook-cn.tex
+xelatex -interaction=nonstopmode -file-line-error elegantbook-cn.tex
+```
+
+(Same pattern for `elegantbook-en.tex`.)
+
+### Troubleshooting
+
+- **`biber: command not found` / bibliography not shown**: install `biber`, then rebuild.
+- **Font-related errors in Chinese mode**: use **XeLaTeX** (as above) and ensure required system fonts are installed.
+- **Missing package errors** (`.sty` not found): install the missing TeX Live packages (or install a fuller TeX Live scheme).
