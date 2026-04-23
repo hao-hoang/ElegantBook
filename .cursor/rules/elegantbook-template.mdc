@@ -1,0 +1,65 @@
+---
+description: ElegantBook v4.6 template conventions, class options, and workflows (from official guide)
+alwaysApply: true
+---
+
+# ElegantBook project rules (guide-derived)
+
+Use these when editing this book. Prefer matching **existing patterns in `elegantbook-en.tex` / `elegantbook-cn.tex`** and **`elegantbook.cls`**. Do not replace the template with ad-hoc article-style LaTeX unless the user asks.
+
+## Document setup
+
+- **Class**: `\documentclass[...]{elegantbook}` extends `book` (loaded as `a4paper`, `oneside`). **Paper size options on `book` have no effect** when `device` layout applies; use `device` + `geometry` behavior from the class instead.
+- **Encoding**: UTF-8; **TeX Live** (or MacTeX) is the assumed distribution.
+- **Language**: `lang=en` (default) or `lang=cn`. **Chinese text is only acceptable with `lang=cn`.** Other `lang=*` options exist (it, fr, nl, hu, de, es, mn, jp, …) but translations are community-provided.
+- **Build (this repo)**: **XeLaTeX** + **biber** + **biblatex** (see project `README.md`). Use `\addbibresource[location=local]{reference.bib}` and `\printbibliography[heading=bibintoc, title=\ebibname]` where the bibliography belongs. Default backend is **biber** (`bibend=biber`); `bibtex` is optional via `bibend=bibtex`.
+- **Citations**: `\cite`, `\parencite`, etc. Styles default to **numeric**; override with `citestyle` / `bibstyle` class options if needed.
+
+## Title / cover metadata (preamble)
+
+Use the template’s commands: `\title`, `\subtitle`, `\author`, `\institute`, `\date`, `\version`, `\bioinfo{caption}{content}`, `\extrainfo{...}`, `\logo{...}`, `\cover{...}`. **Cover accent bar**: `\definecolor{customcolor}{RGB}{...}` then `\colorlet{coverlinecolor}{customcolor}`. **Cover image** is expected around **1280×1024** if you replace it; **logo** is **1:1** (square).
+
+## Class options (common)
+
+- **Color theme**: `green`, `cyan`, `blue` (default), `gray`, `black`, or `nocolor` / `color=none` then set `structurecolor`, `main`, `second`, `third` via `\definecolor`.
+- **Device**: `normal` (default A4 layout) or `pad` / `device=pad` (different page size; adjust figures if you switch).
+- **Chapter title layout**: `hang` (default, one line) vs `display` (two lines) / `titlestyle=...`.
+- **Theorem presentation**: `fancy` (default, `tcolorbox`) vs `simple` (`amsthm`).
+- **Theorem numbering scope**: `chapter` (default) vs `section` / `thmcnt=section`.
+- **Math font**: `math=cm` (default), `math=newtx`, or `math=mtpro2`. If `newtx`, watch **hyphen/spacing** issues (guide uses `\kern0pt` workarounds in places).
+- **TOC columns**: `onecol` (default) or `twocol`. Depth: default `\setcounter{tocdepth}{1}`; use `2` if you need deeper TOC.
+- **Margin notes**: `marginpar=margintrue` widens layout for margin; use `\marginpar` / `marginnote`. **Never put `figure`/`table` floats in the margin**—use `\includegraphics` or `tabular`, **`\captionof`**, and `\centerline` or `center`.
+- **Solutions in print**: `result=answer` vs `result=noanswer` to hide `solution` / `proof` where applicable.
+- **`usesamecnt`**: optional single counter across theorem-style environments (see version history in guide).
+
+## Body structure
+
+- Typical flow: `\maketitle` → `\frontmatter` → `\tableofcontents` → `\mainmatter` → chapters → **`\printbibliography[...]`** (often before `\appendix` or per book structure) → `\appendix` → appendices.
+- **Unnumbered chapter intro**: `\chapter*{...}` plus `\markboth{...}{...}` so headers/TOC behave.
+- **Chapter intro list**: `introduction` environment (optional title `[...]`); **end-of-chapter exercises**: `problemset` (optional title; may appear in TOC per template behavior).
+
+## Theorem and math environments
+
+- **Groups**: (1) theorem-class: `definition`, `theorem`, `lemma`, `corollary`, `axiom`, `postulate`, `proposition` (+ star unnumbered variants); (2) `example`, `exercise`, `problem`; (3) `proof`, `note`; (4) `conclusion`, `assumption`, `property`, `remark`, `solution`.
+- **`fancy` mode (two-argument tcolorbox style)** e.g. `\begin{theorem}{title}{label}`. Cross-refs use **prefixes** in `\ref`: `def:`, `thm:`, `lem:`, `cor:`, `pro:`, `pos:`, `axi:` as in the guide’s table.
+- **`simple` mode and v4.1+ standard style**: `\begin{theorem}[name]\label{thm:...}` — then `\ref` matches `\label` directly (no forced `thm:` prefix in the label name, but be consistent).
+- Use **booktabs** (`\toprule`, `\midrule`, `\bottomrule`) for tables as in samples.
+
+## Figures, code, lists
+
+- Main text **floats**: `figure` / `table` with `\caption` + `\label` as usual; place graphics under `image/` or `figure/` as in this repo.
+- **Code**: `listings` is used; language is optional per listing; global tuning via `\lstset`.
+- **Lists**: template styles `itemize` to **3** levels, `enumerate` to **4**—keep nesting within those limits for consistent visuals.
+
+## Fonts and extra packages
+
+- **XeLaTeX path** uses **TeX Gyre TermesX** / Heros as in the class; **pdfLaTeX** uses `newtxtext` etc. Do not casually stack extra math font packages—**“Too many symbol fonts declared”** can occur; for `yhmath` / `esvect` the official approach is to **edit `elegantbook.cls`** and uncomment the documented blocks, not to fight the class from the `.tex` alone.
+
+## Legal / attribution
+
+- Template is under **LPPL v1.3c+**. Derivative works should keep **license/copyright** and template attribution as required by LPPL and the project’s `License` file.
+
+## When changing things
+
+- Prefer **class options** and **provided environments/commands** over duplicating functionality with conflicting packages.
+- After structural or citation edits, assume a **multi-pass** build (e.g. `latexmk -xelatex`) so TOC, refs, and bibliography stay in sync.
